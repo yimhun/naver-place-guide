@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AX영업팀 SEO 최적화 Setting Guide | Neo Communications</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@100;300;400;600;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --naver-green: #03C75A;
+            --m-x: 50%;
+            --m-y: 50%;
+        }
+        
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background-color: #ffffff;
+            color: #1e293b;
+            overflow-x: hidden;
+            /* 글로벌 폰트 크기 상향 조정 */
+            font-size: 1.1rem; 
+        }
+
+        /* Interactive Background */
+        .bg-dynamic {
+            background: radial-gradient(circle at var(--m-x) var(--m-y), rgba(3, 199, 90, 0.08) 0%, transparent 45%),
+                        linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            background-attachment: fixed;
+        }
+
+        /* Glassmorphism Panels */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.03);
+        }
+
+        /* Navigation Style */
+        .nav-link.active { color: var(--naver-green); font-weight: 900; }
+        .nav-link.active::after { width: 100%; }
+        .nav-link::after {
+            content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 3px;
+            background: var(--naver-green); transition: width 0.3s ease;
+        }
+
+        /* Custom Checkbox Size Up */
+        .check-box {
+            width: 1.75rem;
+            height: 1.75rem;
+            border-radius: 0.5rem;
+        }
+        .checkbox-input:checked + label .check-box { background-color: var(--naver-green); border-color: var(--naver-green); }
+        .checkbox-input:checked + label .check-text { color: #94a3b8; text-decoration: line-through; }
+
+        /* Animation */
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-slide-up { animation: slideUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 400px; /* 차트 크기 확대 */
+        }
+
+        #modal-overlay { transition: opacity 0.3s ease, visibility 0.3s ease; }
+        #modal-content { transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+        /* No Scrollbar */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+    <!-- Application Plan:
+         1. Interactive Cover: Cinematic bold titles, mouse parallax.
+         2. Global Header: Increased font navigation, live 100pts score.
+         3. Automatic Viewport: Tab switching triggers scroll to top of content area.
+         4. Massive Typography: 1.5x larger font sizes across all elements for readability.
+         5. Action Plan Modals: Deep-dive "i" button manuals for new employees.
+    -->
+</head>
+<body class="bg-dynamic">
+
+    <!-- COVER SECTION -->
+    <section id="cover" class="h-screen flex items-center justify-center relative overflow-hidden z-[100] bg-white">
+        <div class="z-10 text-center px-6 max-w-5xl">
+            <div class="mb-10 overflow-hidden">
+                <span class="inline-block px-6 py-2 rounded-full border-2 border-green-500 text-sm font-black tracking-[0.3em] text-green-600 uppercase animate-slide-up">
+                    AX Sales Team Professional Manual
+                </span>
+            </div>
+            <h1 class="text-6xl md:text-9xl font-black text-slate-900 tracking-tighter mb-10 leading-none animate-slide-up" style="animation-delay: 0.2s">
+                SEO <span class="text-green-600">MASTER</span><br>SYSTEM
+            </h1>
+            <div class="flex flex-col items-center space-y-8 animate-slide-up" style="animation-delay: 0.4s">
+                <div class="h-2 w-28 bg-slate-900 rounded-full"></div>
+                <div class="text-2xl md:text-3xl text-slate-500 font-light tracking-wide">
+                    주식회사 <span class="font-bold text-slate-900">네오커뮤니케이션즈</span> | <span class="font-semibold text-slate-700">임훈</span>
+                </div>
+                <button onclick="launchApp()" class="mt-12 group relative inline-flex items-center justify-center px-16 py-6 bg-slate-900 text-white rounded-full overflow-hidden transition-all hover:scale-105 active:scale-95 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)]">
+                    <span class="relative z-10 font-black tracking-widest text-lg">가이드 시스템 가동</span>
+                    <div class="absolute inset-0 bg-green-600 translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
+                </button>
+            </div>
+        </div>
+        <!-- Parallax Background Elements -->
+        <div id="p-blob-1" class="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-green-200/30 rounded-full blur-[120px] pointer-events-none"></div>
+        <div id="p-blob-2" class="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] bg-blue-100/40 rounded-full blur-[150px] pointer-events-none"></div>
+    </section>
+
+    <!-- MAIN APP INTERFACE -->
+    <div id="main-app" class="hidden opacity-0 transition-opacity duration-1000">
+        
+        <!-- Header -->
+        <header class="fixed top-0 left-0 right-0 z-50 glass-panel border-b border-slate-200">
+            <div class="max-w-[1400px] mx-auto px-8 py-6 flex justify-between items-center">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-slate-900 rounded-2xl flex items-center justify-center text-white font-black text-2xl shadow-xl">N</div>
+                    <div class="hidden sm:block">
+                        <div class="text-base font-black text-slate-900 tracking-tighter uppercase leading-none mb-1">AX SALES LAB</div>
+                        <div class="text-[10px] text-slate-400 font-bold tracking-widest uppercase">Neo Communications</div>
+                    </div>
+                </div>
+
+                <nav class="hidden md:flex space-x-12">
+                    <button onclick="switchTab('overview')" id="tab-overview" class="nav-link active relative py-2 text-sm font-black uppercase tracking-widest">알고리즘 분석</button>
+                    <button onclick="switchTab('checklist')" id="tab-checklist" class="nav-link relative py-2 text-sm font-black uppercase tracking-widest">실무 체크리스트</button>
+                    <button onclick="switchTab('content')" id="tab-content" class="nav-link relative py-2 text-sm font-black uppercase tracking-widest">콘텐츠 전략</button>
+                    <button onclick="switchTab('qa')" id="tab-qa" class="nav-link relative py-2 text-sm font-black uppercase tracking-widest">신입 직원 Q&A</button>
+                </nav>
+
+                <div class="flex items-center space-x-8">
+                    <div class="text-right">
+                        <div class="text-[10px] text-slate-400 font-black uppercase mb-1">Optimization Score</div>
+                        <div class="flex items-baseline justify-end">
+                            <span id="score-val" class="text-4xl font-black text-green-600 leading-none">0</span>
+                            <span class="text-slate-300 font-bold text-lg ml-1">/ 100</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content Area -->
+        <main id="content-area" class="pt-36 pb-24 max-w-[1400px] mx-auto px-8">
+            
+            <!-- SECTION: Overview -->
+            <section id="sec-overview" class="tab-pane block animate-slide-up">
+                <div class="mb-16 max-w-4xl">
+                    <h2 class="text-5xl font-black text-slate-900 mb-6 tracking-tight">상위 노출의 3대 핵심 지표</h2>
+                    <p class="text-2xl text-slate-500 font-light leading-relaxed">네이버 플레이스는 로직에 의해 움직입니다. 신입 직원은 <strong>적합도, 인기도, 신뢰도</strong>의 조화를 완벽하게 세팅해야 합니다.</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+                    <div class="lg:col-span-2 glass-panel p-12 rounded-[3.5rem] shadow-sm">
+                        <h3 class="font-black text-slate-400 uppercase tracking-widest text-xs mb-10 text-center">Algorithm Radar Analytics</h3>
+                        <div class="chart-container">
+                            <canvas id="radarChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="space-y-6 flex flex-col justify-center">
+                        <div class="glass-panel p-8 rounded-3xl border-l-8 border-l-green-500">
+                            <h4 class="text-xl font-black text-slate-900">적합도 (Relevance)</h4>
+                            <p class="text-sm text-slate-500 mt-2 leading-relaxed">검색어와 정보의 일치성 (업종, 메뉴, 태그 최적화)</p>
+                        </div>
+                        <div class="glass-panel p-8 rounded-3xl border-l-8 border-l-blue-500">
+                            <h4 class="text-xl font-black text-slate-900">인기도 (Popularity)</h4>
+                            <p class="text-sm text-slate-500 mt-2 leading-relaxed">클릭수, 저장하기, 예약, 길찾기 등 유저 실전 반응</p>
+                        </div>
+                        <div class="glass-panel p-8 rounded-3xl border-l-8 border-l-purple-500">
+                            <h4 class="text-xl font-black text-slate-900">신뢰도 (Reliability)</h4>
+                            <p class="text-sm text-slate-500 mt-2 leading-relaxed">정보의 최신성, 관리 성실도, 어뷰징 필터링</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION: Checklist -->
+            <section id="sec-checklist" class="tab-pane hidden animate-slide-up">
+                <div class="mb-12">
+                    <h2 class="text-5xl font-black text-slate-900 mb-4 tracking-tight">실무 최적화 체크리스트</h2>
+                    <p class="text-2xl text-slate-500 font-light">각 항목의 <span class="text-green-600 font-bold">i</span> 버튼을 클릭하여 세부 액션 플랜을 확인하고 100점을 만드세요.</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                    <div class="space-y-8">
+                        <div class="flex items-center space-x-4 mb-2">
+                            <div class="w-14 h-14 bg-slate-900 rounded-2xl flex items-center justify-center text-white font-black text-lg">01</div>
+                            <h3 class="text-3xl font-black text-slate-800">기본 정보 최적화 (50점)</h3>
+                        </div>
+                        <div id="list-basics" class="space-y-4"></div>
+                    </div>
+                    <div class="space-y-8">
+                        <div class="flex items-center space-x-4 mb-2">
+                            <div class="w-14 h-14 bg-green-600 rounded-2xl flex items-center justify-center text-white font-black text-lg">02</div>
+                            <h3 class="text-3xl font-black text-slate-800">마케팅 & 활성화 (50점)</h3>
+                        </div>
+                        <div id="list-marketing" class="space-y-4"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION: Content -->
+            <section id="sec-content" class="tab-pane hidden animate-slide-up">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                    <div class="glass-panel p-12 rounded-[3.5rem] shadow-xl">
+                        <h3 class="font-black text-slate-400 uppercase tracking-widest text-xs mb-10 text-center">Visual Mix Strategy</h3>
+                        <div class="chart-container">
+                            <canvas id="photoChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="bg-slate-900 text-white p-12 rounded-[3.5rem] shadow-2xl flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-3xl font-black mb-8 italic flex items-center">
+                                <span class="w-3 h-3 bg-green-500 rounded-full mr-4 shadow-[0_0_20px_rgba(3,199,90,1)]"></span>
+                                소개글 시뮬레이션
+                            </h3>
+                            <div class="flex space-x-4 mb-10">
+                                <button onclick="simText('bad')" class="flex-1 py-4 bg-slate-800 rounded-2xl text-xs font-black border border-slate-700 hover:bg-slate-700 transition-all">피해야 할 예시</button>
+                                <button onclick="simText('good')" class="flex-1 py-4 bg-green-600 rounded-2xl text-xs font-black hover:bg-green-500 transition-all shadow-lg shadow-green-900/40">최적화된 예시</button>
+                            </div>
+                            <div id="sim-display" class="bg-slate-800/50 p-8 rounded-3xl min-h-[250px] text-lg leading-relaxed text-slate-300 font-light border border-slate-700">
+                                버튼을 클릭하여 스타일을 비교하세요.
+                            </div>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-8 text-right italic font-medium">체류 시간을 늘리는 것이 SEO의 핵심입니다.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION: Q&A -->
+            <section id="sec-qa" class="tab-pane hidden animate-slide-up">
+                <div class="max-w-4xl mx-auto space-y-6">
+                    <h2 class="text-5xl font-black text-slate-900 mb-12 text-center tracking-tight">신입 직원 실무 Q&A</h2>
+                    <div id="qa-container" class="space-y-4"></div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-white border-t border-slate-200 py-24">
+            <div class="max-w-7xl mx-auto px-8 text-center">
+                <div class="text-6xl font-black text-slate-100 italic tracking-tighter mb-10 select-none">NEO COMMUNICATIONS</div>
+                <div class="flex justify-center space-x-4 mb-8 font-black uppercase tracking-[0.2em] text-[10px] text-slate-400">
+                    <span class="bg-slate-50 border border-slate-200 px-4 py-2 rounded-full">AX Sales Team</span>
+                    <span class="bg-slate-50 border border-slate-200 px-4 py-2 rounded-full">Confidential Document</span>
+                </div>
+                <div class="max-w-3xl mx-auto space-y-2">
+                    <p class="text-sm text-slate-500 font-bold">본 자료는 주식회사 네오커뮤니케이션즈의 자산이며 상업적 무단 복제 및 외부 유출을 엄격히 금합니다.</p>
+                    <p class="text-[10px] text-slate-300 tracking-tighter uppercase font-medium italic">Unauthorized use or reproduction of this manual is strictly prohibited and protected by law. © 2026 Neo Communications.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- MODAL -->
+    <div id="modal-overlay" class="fixed inset-0 z-[1000] bg-slate-900/70 backdrop-blur-md flex items-center justify-center p-6 invisible opacity-0">
+        <div id="modal-content" class="bg-white w-full max-w-2xl rounded-[3.5rem] shadow-2xl overflow-hidden transform scale-95 transition-all">
+            <div class="p-10 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                <div>
+                    <span class="text-[10px] font-black text-green-600 uppercase tracking-widest block mb-2">Detailed Manual</span>
+                    <h3 id="modal-title" class="text-2xl font-black text-slate-800 tracking-tight">액션 플랜</h3>
+                </div>
+                <button onclick="closeModal()" class="w-12 h-12 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-slate-900 transition-all">✕</button>
+            </div>
+            <div id="modal-body" class="p-10 max-h-[60vh] overflow-y-auto no-scrollbar text-lg leading-relaxed text-slate-600 space-y-6"></div>
+            <div class="p-10 bg-slate-50 border-t border-slate-100 text-right">
+                <button onclick="closeModal()" class="px-10 py-4 bg-slate-900 text-white rounded-full text-sm font-black shadow-lg hover:bg-green-600 transition-colors">확인했습니다</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- CONTENT DATA ---
+        const checklistItems = {
+            basics: [
+                { id: "b1", text: "상호명 / 주소 불일치 정밀 검수", score: 10, plan: "사업자등록증과 플레이스 정보가 100% 일치해야 합니다. 지도 핀의 위치가 건물 주출입구와 맞는지 확인하고 틀릴 경우 위치 수정을 요청하세요." },
+                { id: "b2", text: "전략적 카테고리 재설정", score: 10, plan: "타겟 키워드 검색 시 1~5위에 랭크된 경쟁사들의 카테고리를 분석하여 일치시키거나 더 넓은 노출이 가능한 업종으로 변경하세요." },
+                { id: "b3", text: "대표 키워드 5개 (지역명+업종 매핑)", score: 10, plan: "업체명은 검색하지 않아도 이미 노출됩니다. 5개 칸은 [지역명+맛집], [지역명+주요메뉴] 등으로 꽉 채워 유입 범위를 넓히세요." },
+                { id: "b4", text: "찾아오는 길 / 주차 정보 보강", score: 10, plan: "지하철역 출구 번호, 주변 랜드마크, 주차 가능 대수 및 근처 유료 주차장 정보를 400자 내외로 상세히 작성하여 체류 시간을 늘리세요." },
+                { id: "b5", text: "이용시간 및 스마트콜 연동", score: 10, plan: "브레이크 타임과 라스트 오더를 정확히 설정하고, 0507 스마트콜을 연동하여 유입 통화 데이터를 네이버에 공식 제공하세요." }
+            ],
+            marketing: [
+                { id: "m1", text: "네이버 예약 / 주문 서비스 연동", score: 10, plan: "네이버 생태계 내 결제는 가중치가 높습니다. '즉시 승인' 모드를 권장하며, 예약 고객을 위한 전용 혜택(음료 등)을 반드시 추가하세요." },
+                { id: "m2", text: "알림받기 전용 혜택 쿠폰 발행", score: 10, details: "알림받기 숫자는 매장의 인기도 지표입니다. 매력적인 서비스 쿠폰을 발행하여 플레이스 홈 메인에 전시 설정을 완료하세요." },
+                { id: "m3", text: "영수증 리뷰 기반 사진 리뷰 유도", score: 10, details: "사진 리뷰는 클릭률을 3배 이상 높입니다. 테이블 텐트나 QR 가이드를 통해 현장에서 '키워드가 포함된 사진 리뷰'를 유도하세요." },
+                { id: "m4", text: "플레이스 새소식 주 1회 업데이트", score: 10, details: "관리의 성실성과 최신성 지표입니다. 이벤트가 없더라도 신메뉴 소개나 매장 일상을 사진과 함께 꾸준히 업로드하세요." },
+                { id: "m5", text: "네이버 톡톡 자동 응대 시나리오", score: 10, details: "유저 문의에 즉각 반응하여 신뢰도 지수를 높입니다. 주차, 가격 정보 등 자주 묻는 질문을 시나리오로 등록해 이탈을 방지하세요." }
+            ]
+        };
+
+        const qaItems = [
+            { q: "순위 상승까지 보통 기간이 얼마나 걸리나요?", a: "세팅 완료 후 알고리즘 반영 주기(평균 3~7일)를 거칩니다. 다만 경쟁이 치열한 키워드는 유저 데이터(저장, 길찾기)가 쌓여야 하므로 보통 2주에서 한 달 정도의 최적화 기간을 권장합니다." },
+            { q: "프로그램(어뷰징)으로 트래픽을 넣으면 안 되나요?", a: "절대 금지입니다. 네이버 클린봇은 비정상적인 유입 패턴을 매우 높은 확률로 잡아냅니다. 적발 시 순위 영구 락(Lock) 또는 검색 결과 제외 처리가 되어 브랜드 가치를 완전히 상실하게 됩니다." },
+            { q: "대표 키워드를 자주 바꿔도 되나요?", a: "잦은 변경은 로직에 혼란을 줍니다. 한 번 설정한 키워드는 최소 2주간 노출 데이터를 모니터링한 후 효율이 낮은 것부터 하나씩 교체하는 것이 정석입니다." }
+        ];
+
+        const appState = { checked: new Set(), currentScore: 0 };
+
+        // --- CORE LOGIC ---
+        function launchApp() {
+            const cover = document.getElementById('cover');
+            const app = document.getElementById('main-app');
+            cover.classList.add('-translate-y-full', 'opacity-0', 'transition-all', 'duration-1000');
+            setTimeout(() => {
+                cover.classList.add('hidden');
+                app.classList.remove('hidden');
+                setTimeout(() => {
+                    app.classList.add('opacity-100');
+                    initCharts();
+                    renderUI();
+                }, 100);
+            }, 800);
+        }
+
+        function switchTab(id) {
+            document.querySelectorAll('.tab-pane').forEach(s => s.classList.add('hidden'));
+            document.getElementById(`sec-${id}`).classList.remove('hidden');
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            document.getElementById(`tab-${id}`).classList.add('active');
+            
+            // Tab 이동 시 내용이 바로 보이도록 최상단으로 스크롤
+            window.scrollTo({ top: 0, behavior: 'instant' });
+        }
+
+        function renderUI() {
+            document.getElementById('list-basics').innerHTML = checklistItems.basics.map(i => createItemHTML(i, 'basics')).join('');
+            document.getElementById('list-marketing').innerHTML = checklistItems.marketing.map(i => createItemHTML(i, 'marketing')).join('');
+            document.getElementById('qa-container').innerHTML = qaItems.map((i, idx) => `
+                <div class="glass-panel rounded-3xl overflow-hidden group">
+                    <button onclick="toggleQa(${idx})" class="w-full p-8 text-left flex justify-between items-center hover:bg-slate-50 transition-all">
+                        <span class="text-xl font-bold text-slate-800 flex items-center">
+                            <span class="text-green-600 mr-4 font-black">Q.</span> ${i.q}
+                        </span>
+                        <span id="qa-icon-${idx}" class="text-slate-300 font-light text-3xl">＋</span>
+                    </button>
+                    <div id="qa-body-${idx}" class="max-h-0 overflow-hidden transition-all duration-500 bg-slate-50/50">
+                        <div class="p-8 text-lg text-slate-600 leading-relaxed border-t border-slate-100">${i.a}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function createItemHTML(item, cat) {
+            return `
+                <div class="glass-panel p-6 rounded-3xl flex items-center justify-between hover:border-green-300 transition-colors">
+                    <div class="flex items-center flex-1">
+                        <input type="checkbox" id="${item.id}" class="checkbox-input hidden" onchange="handleCheck('${item.id}')">
+                        <label for="${item.id}" class="flex items-center cursor-pointer w-full">
+                            <div class="check-box border-2 border-slate-200 flex items-center justify-center transition-all mr-6 flex-shrink-0">
+                                <span class="text-white text-[12px] font-black">✔</span>
+                            </div>
+                            <span class="check-text text-xl font-bold text-slate-700 select-none tracking-tight">${item.text}</span>
+                        </label>
+                    </div>
+                    <button onclick="openModal('${cat}', '${item.id}')" class="w-10 h-10 rounded-full bg-slate-50 text-green-600 font-black text-xs flex items-center justify-center border border-slate-100 shadow-sm hover:scale-110 transition-transform">i</button>
+                </div>
+            `;
+        }
+
+        function handleCheck(id) {
+            if (appState.checked.has(id)) appState.checked.delete(id);
+            else appState.checked.add(id);
+            updateScore();
+        }
+
+        function updateScore() {
+            let total = 0;
+            const all = [...checklistItems.basics, ...checklistItems.marketing];
+            all.forEach(i => { if(appState.checked.has(i.id)) total += i.score; });
+            document.getElementById('score-val').innerText = total;
+        }
+
+        function openModal(cat, id) {
+            const item = checklistItems[cat].find(i => i.id === id);
+            document.getElementById('modal-title').innerText = item.text;
+            document.getElementById('modal-body').innerHTML = item.plan || item.details;
+            const overlay = document.getElementById('modal-overlay');
+            overlay.classList.remove('invisible', 'opacity-0');
+            document.getElementById('modal-content').classList.replace('scale-95', 'scale-100');
+        }
+
+        function closeModal() {
+            const overlay = document.getElementById('modal-overlay');
+            overlay.classList.add('opacity-0');
+            document.getElementById('modal-content').classList.replace('scale-100', 'scale-95');
+            setTimeout(() => overlay.classList.add('invisible'), 300);
+        }
+
+        function toggleQa(idx) {
+            const body = document.getElementById(`qa-body-${idx}`);
+            const icon = document.getElementById(`qa-icon-${idx}`);
+            if (body.style.maxHeight === '0px' || !body.style.maxHeight) {
+                body.style.maxHeight = '500px'; icon.innerText = '✕';
+            } else {
+                body.style.maxHeight = '0px'; icon.innerText = '＋';
+            }
+        }
+
+        function simText(mode) {
+            const box = document.getElementById('sim-display');
+            if(mode === 'bad') {
+                box.innerHTML = `<span class="text-red-400 font-black uppercase text-xs mb-3 block">[나쁜 예: 키워드 남발]</span>
+                강남맛집 강남역파스타 추천 파스타맛있는곳 예약문의. 저희 가게는 파스타 맛집으로 유명하고 분위기도 좋고 가격도 쌉니다. 많이 방문해주세요. #강남맛집 #파스타`;
+            } else {
+                box.innerHTML = `<span class="text-green-400 font-black uppercase text-xs mb-3 block">[최적화된 예: 스토리텔링]</span>
+                🍝 <b>"강남에서 즐기는 생면 파스타의 정점"</b><br><br>
+                단순한 한 끼가 아닌 9가지 생면으로 빚어낸 이탈리아 현지의 풍미를 선사합니다. CGV 뒷편, 도심 속 작은 정원에서의 특별한 데이트를 제안합니다.<br>
+                🎁 <b>알림받기 시 에이드 쿠폰 즉시 증정</b>`;
+            }
+        }
+
+        // --- VISUAL INTERACTIVITY ---
+        document.addEventListener('mousemove', (e) => {
+            const x = (e.clientX / window.innerWidth) * 100;
+            const y = (e.clientY / window.innerHeight) * 100;
+            document.body.style.setProperty('--m-x', `${x}%`);
+            document.body.style.setProperty('--m-y', `${y}%`);
+            
+            if (document.getElementById('cover')) {
+                document.getElementById('p-blob-1').style.transform = `translate(${(x-50)/10}px, ${(y-50)/10}px)`;
+                document.getElementById('p-blob-2').style.transform = `translate(${(50-x)/8}px, ${(50-y)/8}px)`;
+            }
+        });
+
+        function initCharts() {
+            const precisionFix = { precision: 0 }; // Fix RangeError
+            
+            // Radar
+            new Chart(document.getElementById('radarChart'), {
+                type: 'radar',
+                data: {
+                    labels: ['적합도', '인기도', '신뢰도', '활동성', '최신성'],
+                    datasets: [{
+                        label: 'SEO 가중치',
+                        data: [95, 85, 90, 80, 100],
+                        backgroundColor: 'rgba(3, 199, 90, 0.1)',
+                        borderColor: '#03C75A',
+                        borderWidth: 3,
+                        pointBackgroundColor: '#03C75A',
+                        pointRadius: 6
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    scales: { r: { min: 0, max: 100, ticks: { display: false, precision: 0 } } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+
+            // Photo Donut
+            new Chart(document.getElementById('photoChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['음식', '인테리어', '메뉴판', '외관'],
+                    datasets: [{
+                        data: [45, 25, 20, 10],
+                        backgroundColor: ['#03C75A', '#0f172a', '#94a3b8', '#e2e8f0'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    cutout: '75%',
+                    plugins: { legend: { position: 'bottom', labels: { boxWidth: 15, font: { weight: 'bold' } } } }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
